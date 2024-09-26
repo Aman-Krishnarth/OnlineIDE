@@ -28,7 +28,13 @@ function Home() {
 
       <div>
         {isGridLayout ? (
-          <div className="px-[100px]">
+          <div className="px-[100px] flex flex-wrap gap-2 justify-center">
+            <GridCard />
+            <GridCard />
+            <GridCard />
+            <GridCard />
+            <GridCard />
+            <GridCard />
             <GridCard />
           </div>
         ) : (
