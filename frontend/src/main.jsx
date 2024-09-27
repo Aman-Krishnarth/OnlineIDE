@@ -8,7 +8,7 @@ import NoPage from './pages/NoPage.jsx'
 import Signup from './pages/Signup.jsx'
 import Login from "./pages/Login.jsx"
 import ForgotPassword from './pages/ForgotPassword.jsx'
-import Editor from './pages/Editor.jsx'
+import EditorPage from './pages/EditorPage.jsx'
 
 const router = createBrowserRouter([
   {
@@ -33,7 +33,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/editor/:projectId",
-        element: <Editor/>
+        element: <EditorPage/>
       },
       {
         path: "*",
