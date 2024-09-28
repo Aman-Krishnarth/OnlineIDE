@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EditorNavbar from "../components/EditorNavbar";
 import Editor from "@monaco-editor/react";
 import { MdLightMode } from "react-icons/md";
@@ -6,8 +6,8 @@ import { AiOutlineExpandAlt } from "react-icons/ai";
 
 function EditorPage() {
   const [isLightMode, setIsLightMode] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [tab, setTab] = useState("html")
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [tab, setTab] = useState("html");
   const [htmlCode, setHtmlCode] = useState("<h1>Hello world</h1>");
   const [cssCode, setCssCode] = useState("body { background-color: #f4f4f4; }");
   const [jsCode, setJsCode] = useState('console.log("Hello world!")');
@@ -22,6 +22,18 @@ function EditorPage() {
     }
   };
 
+  const run = ()=>{
+    const html = htmlCode;
+    const css = `<style>${cssCode}</style>`
+    const js = `<script>${jsCode}</script>`
+    const iframe = document.getElementById("iframe");
+    iframe.srcdoc = html+css+js;
+  }
+
+  useEffect(()=>{
+    run()
+  },[])
+
   return (
     <div>
       <EditorNavbar />
@@ -33,19 +45,22 @@ function EditorPage() {
             } items-center justify-between gap-2 w-full  h-[50px] px-[40px]`}
           >
             <div className="flex items-center gap-2">
-              <div className="tab cursor-pointer p-[6px] bg-[#1E1E1E] px-[10px] text-[15px]"
-				onClick={()=> setTab("html")}
-			  >
+              <div
+                className="tab cursor-pointer p-[6px] bg-[#1E1E1E] px-[10px] text-[15px]"
+                onClick={() => setTab("html")}
+              >
                 HTML
               </div>
-              <div className="tab cursor-pointer p-[6px] bg-[#1E1E1E] px-[10px] text-[15px]"
-			  onClick={()=> setTab("css")} 
-			  >
+              <div
+                className="tab cursor-pointer p-[6px] bg-[#1E1E1E] px-[10px] text-[15px]"
+                onClick={() => setTab("css")}
+              >
                 CSS
               </div>
-              <div className="tab cursor-pointer p-[6px] bg-[#1E1E1E] px-[10px] text-[15px]"
-			  onClick={()=> setTab("js")} 
-			  >
+              <div
+                className="tab cursor-pointer p-[6px] bg-[#1E1E1E] px-[10px] text-[15px]"
+                onClick={() => setTab("js")}
+              >
                 JavaScript
               </div>
             </div>
@@ -59,11 +74,12 @@ function EditorPage() {
               >
                 <MdLightMode />
               </i>
-              <i className={`text-xl cursor-pointer ${
-				isLightMode ? "text-black" : "text-white"
-			  }`}
-			 onClick={()=> setIsExpanded(!isExpanded)} 
-			  >
+              <i
+                className={`text-xl cursor-pointer ${
+                  isLightMode ? "text-black" : "text-white"
+                }`}
+                onClick={() => setIsExpanded(!isExpanded)}
+              >
                 <AiOutlineExpandAlt />
               </i>
             </div>
@@ -106,8 +122,8 @@ function EditorPage() {
         </div>
 
         <iframe
-          id="output"
-          className={`${isExpanded ? "w-0" : "w-1/2"} min-h-screen bg-red-400`}
+          id="iframe"
+          className={`${isExpanded ? "w-0" : "w-1/2"} min-h-screen bg-white`}
         ></iframe>
       </div>
     </div>
