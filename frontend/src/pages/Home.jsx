@@ -10,7 +10,7 @@ function Home() {
 
   return (
     <div>
-      <Navbar />
+      <Navbar setIsGridLayout={setIsGridLayout} />
 
       <div className="flex items-center justify-between px-[100px] my-10">
         <h2 className="text-2xl">Hi, Kratos 👋</h2>
@@ -55,7 +55,7 @@ function Home() {
 
       {isCreateModelShow && (
         <div className="createModelCon fixed top-0 left-0 right-0 bottom-0 w-screen h-screen bg-[rgb(0,0,0,0.5)] flex items-center justify-center">
-          <div className="createModel w-[25vw] h-[27vh] shadow-lg shadow-black/50 bg-[#000] rounded-[10px] p-[20px]">
+          <div className="createModel w-[25vw] min-h-fit shadow-lg shadow-black/50 bg-[#212121] rounded-[10px] p-[20px]">
             <h3 className="text-2xl">Create New Project</h3>
             <div className="bg-[#202020] mt-4">
               <div className="w-full bg-[#141414] rounded flex items-center mb-4">
@@ -63,19 +63,19 @@ function Home() {
                   type="text"
                   placeholder="Project Title"
                   name="projectTitle"
-                  className="p-2 bornder-none outline-none bg-transparent text-white text-base"
+                  className="py-4 px-2 bornder-none outline-none bg-transparent text-white text-base"
                 />
               </div>
             </div>
             <div className="flex items-center gap-[10px] w-full mt-2">
-              <button className="bg-[#00AEEF] text-white py-2 px-5 border-none rounded cursor-pointer text-base w-full mt-5 hover:bg-[#0086b3] btnBlue rounded-[5px] w-[49%] mb-4 !p-[5px] !px-[10px] !py-[10px]">
+              <button className="bg-[#00AEEF] text-white border-none rounded cursor-pointer text-base w-full mt-5 hover:bg-[#0086b3] btnBlue  mb-4 !p-[5px] !px-[10px] !py-[10px]">
                 Create
               </button>
               <button
                 onClick={() => {
                   setIsCreateModelShow(false);
                 }}
-                className="bg-[#00AEEF] text-white py-2 px-5 border-none rounded cursor-pointer text-base w-full mt-5 hover:bg-[#0086b3] btnBlue !bg-[#1A1919] rounded-[5px] mb-4 w-[49%] !p-[5px] !px-[10px] !py-[10px]"
+                className=" text-white border-none rounded cursor-pointer text-base w-full mt-5 hover:bg-[#0086b3] btnBlue !bg-[#1A1919] mb-4 !p-[5px] !px-[10px] !py-[10px]"
               >
                 Cancel
               </button>

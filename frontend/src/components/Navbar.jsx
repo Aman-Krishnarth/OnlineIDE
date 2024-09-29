@@ -6,7 +6,7 @@ import { MdLightMode } from "react-icons/md";
 import { BsFillGridFill } from "react-icons/bs";
 import { toggleClass } from "../helper";
 
-function Navbar() {
+function Navbar({setIsGridLayout}) {
   const [isDropDown, setIsDropDown] = useState(false);
 
   return (
@@ -47,7 +47,9 @@ function Navbar() {
             Light Mode
           </i>
 
-          <i className="flex items-center gap-2 mt-3 mb-2 cursor-pointer h-full w-full hover:bg-[#4f4b4b] py-2">
+          <i className="flex items-center gap-2 mt-3 mb-2 cursor-pointer h-full w-full hover:bg-[#4f4b4b] py-2"
+          onClick={()=>setIsGridLayout((prev)=>!prev)}
+          >
             {" "}
             <BsFillGridFill className="text-xl " />
             Grid Layout
