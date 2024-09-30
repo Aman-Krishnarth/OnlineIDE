@@ -3,12 +3,4 @@ export const toggleClass = (ele, className) => {
   el.classList.toggle(className);
 };
 
-// export const removeClass = (ele, className) => {
-//   let ele = document.querySelector(ele);
-//   ele.classList.remove(className);
-// };
-
-// export const addClass = (ele, className) => {
-//   let ele = document.querySelector(ele);
-//   ele.classList.add(className);
-// };
+export const backendUrl = "http://localhost:8080"

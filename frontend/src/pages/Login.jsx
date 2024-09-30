@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import logo from "../images/logo.png";
 import image from "../images/authPageSide.png";
 import { Link } from "react-router-dom";
+import axios from "axios"
+import { backendUrl } from "../helper";
 
-function Signup() {
+function Login() {
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -17,6 +19,10 @@ function Signup() {
 
   function submitForm(e) {
     e.preventDefault();
+    axios.post(backendUrl+"/user/login",data).then((res)=>{
+      console.log(res)
+      localStorage.setItem("token",res.data.token)
+    })
   }
 
   return (
@@ -79,4 +85,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default Login;
