@@ -26,46 +26,70 @@ const signup = async (req, res) => {
 
     res.json({
       success: true,
-      message: "User created successfully", 
+      message: "User created successfully",
       token,
     });
   });
 };
 
-const login = async (req,res)=>{
-    console.log("login mein hu")
-    const {email,password} = req.body;
+const login = async (req, res) => {
+  console.log("login mein hu");
+  const { email, password } = req.body;
 
-    const user = await UserModel.findOne({email});
-    console.log(user)
+  const user = await UserModel.findOne({ email });
+  console.log(user);
 
-    if(!user){
-        console.log("user nai hai")
-        return res.json({
-            success: false,
-            message: "User does not exist"
-        })
+  if (!user) {
+    console.log("user nai hai");
+    return res.json({
+      success: false,
+      message: "User does not exist",
+    });
+  }
+
+  bcrypt.compare(password, user.password, (err, result) => {
+    if (result) {
+      const token = jwt.sign({ email }, process.env.JWT_SECRET);
+
+      return res.json({
+        success: true,
+        message: "User logged in successfully",
+        token,
+      });
+    } else {
+      return res.json({
+        success: false,
+        message: "Email or Password is wrong",
+      });
     }
+  });
+};
 
-    bcrypt.compare(password,user.password,(err,result)=>{
-        if(result){
-            
-            const token = jwt.sign({email},process.env.JWT_SECRET);
+const getUserDetails = async (req, res) => {
+  console.log("in get user details")
+  let { token } = req.body;
+  console.log(token)
+  console.log(process.env.JWT_SECRET);
+  // let data = jwt.verify(token, process.env.JWT_SECRET);
+let data = jwt.verify(token,process.env.JWT_SECRET)
+  console.log(data)
 
-            return res.json({
-                success: true,
-                message: "User logged in successfully",
-                token
-            })
+  let id = data.id;
 
-        }else{
-            return res.json({
-                success: false,
-                message: "Email or Password is wrong",
-            })
-        }
-    })
+  let user = await UserModel.findOne({ _id: id });
 
-}
+  if (!user) {
+    return res.json({
+      success: false,
+      message: "User not found",
+    });
+  } else {
+    res.json({
+      success: true,
+      message: "User details fetched successfully",
+      user,
+    });
+  }
+};
 
-module.exports = { signup, login };
+module.exports = { signup, login, getUserDetails };

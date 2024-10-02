@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import logo from "../images/logo.png";
 import image from "../images/authPageSide.png";
-import { Link } from "react-router-dom";
-import axios from "axios"
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { backendUrl } from "../helper";
 
 function Signup() {
@@ -13,6 +13,8 @@ function Signup() {
     password: "",
   });
 
+  const navigate = useNavigate();
+
   function handleInputChange(e) {
     const { name, value } = e.target;
 
@@ -22,13 +24,16 @@ function Signup() {
   function submitForm(e) {
     e.preventDefault();
 
-    axios.post(backendUrl+"/user/signup",data).then((res)=>{
-      console.log(res)
-      localStorage.setItem("token",res.data.token)
-    }).catch((err)=>{
-      console.log("SIGNUP AXIOS ERROR")
-    })
-
+    axios
+      .post(backendUrl + "/user/signup", data)
+      .then((res) => {
+        console.log(res);
+        localStorage.setItem("token", res.data.token);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.log("SIGNUP AXIOS ERROR");
+      });
   }
 
   return (

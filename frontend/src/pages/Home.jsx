@@ -1,12 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import ListCard from "../components/ListCard";
 import GridCard from "../components/GridCard";
+import axios from "axios";
+import { backendUrl } from "../helper";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [isGridLayout, setIsGridLayout] = useState(true);
 
   const [isCreateModelShow, setIsCreateModelShow] = useState(false);
+
+  const [title, setTitle] = useState("");
+
+  const navigate = useNavigate()
+
+  const createProject = async () => {
+    if (title) {
+      await axios
+        .post(backendUrl + "/project/createProject", {
+          title,
+          token: localStorage.getItem("token"),
+        })
+        .then((res) => {
+          console.log(res);
+		  navigate(`/editor/${res.data.projectId}`)
+        })
+        .catch((err) => {
+          console.log("HOME AXIOS ERROR");
+        });
+    } else {
+      alert("title can't be empty");
+    }
+  };
+
+  useEffect(()=>{
+	if(!localStorage.getItem("token")){
+		navigate("/login")
+	}
+  },[])
 
   return (
     <div>
@@ -64,11 +96,15 @@ function Home() {
                   placeholder="Project Title"
                   name="projectTitle"
                   className="py-4 px-2 bornder-none outline-none bg-transparent text-white text-base"
+                  onChange={(e) => setTitle(e.target.value)}
+                  value={title}
                 />
               </div>
             </div>
             <div className="flex items-center gap-[10px] w-full mt-2">
-              <button className="bg-[#00AEEF] text-white border-none rounded cursor-pointer text-base w-full mt-5 hover:bg-[#0086b3] btnBlue  mb-4 !p-[5px] !px-[10px] !py-[10px]">
+              <button className="bg-[#00AEEF] text-white border-none rounded cursor-pointer text-base w-full mt-5 hover:bg-[#0086b3] btnBlue  mb-4 !p-[5px] !px-[10px] !py-[10px]"
+			 onClick={createProject} 
+			  >
                 Create
               </button>
               <button
@@ -79,7 +115,6 @@ function Home() {
               >
                 Cancel
               </button>
-			  
             </div>
           </div>
         </div>

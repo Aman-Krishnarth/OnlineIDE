@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import logo from "../images/logo.png";
 import image from "../images/authPageSide.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"
 import { backendUrl } from "../helper";
 
@@ -10,6 +10,8 @@ function Login() {
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate()
 
   function handleInputChange(e) {
     const { name, value } = e.target;
@@ -22,6 +24,7 @@ function Login() {
     axios.post(backendUrl+"/user/login",data).then((res)=>{
       console.log(res)
       localStorage.setItem("token",res.data.token)
+      navigate("/")
     })
   }
 

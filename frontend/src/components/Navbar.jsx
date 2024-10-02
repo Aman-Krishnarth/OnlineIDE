@@ -1,13 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../images/logo.png";
 import { Link } from "react-router-dom";
 import Avatar from "react-avatar";
 import { MdLightMode } from "react-icons/md";
 import { BsFillGridFill } from "react-icons/bs";
-import { toggleClass } from "../helper";
+import { backendUrl, toggleClass } from "../helper";
+import axios from "axios";
 
-function Navbar({setIsGridLayout}) {
+function Navbar({ setIsGridLayout }) {
   const [isDropDown, setIsDropDown] = useState(false);
+  const [data, setData] = useState(null)
+
+  useEffect(() => {
+    async function getDetails() {
+      await axios
+        .post(backendUrl + "/user/getUserDetails", {
+          token: localStorage.getItem("token"),
+        })
+        .then((res) => {
+          console.log(res);
+          setData(res.data.user)
+        })
+        .catch((err) => {
+          console.log("NAVBAR axios error");
+        });
+    }
+
+    getDetails()
+
+  }, []);
 
   return (
     <div>
@@ -22,7 +43,7 @@ function Navbar({setIsGridLayout}) {
           <Link>Contact</Link>
           <Link>Services</Link>
           <Avatar
-            name="Wim Mostmans"
+            name={`${data ? data.name : ""}`}
             size="50"
             round="50%"
             className="cursor-pointer ml-2"
@@ -47,8 +68,9 @@ function Navbar({setIsGridLayout}) {
             Light Mode
           </i>
 
-          <i className="flex items-center gap-2 mt-3 mb-2 cursor-pointer h-full w-full hover:bg-[#4f4b4b] py-2"
-          onClick={()=>setIsGridLayout((prev)=>!prev)}
+          <i
+            className="flex items-center gap-2 mt-3 mb-2 cursor-pointer h-full w-full hover:bg-[#4f4b4b] py-2"
+            onClick={() => setIsGridLayout((prev) => !prev)}
           >
             {" "}
             <BsFillGridFill className="text-xl " />
