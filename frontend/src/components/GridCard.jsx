@@ -2,19 +2,19 @@ import React, { useState } from "react";
 import codeImg from "../images/code.png";
 import deleteImg from "../images/delete.png";
 
-function GridCard() {
+function GridCard({ project }) {
   const [isDeleteModelShow, setIsDeleteModelShow] = useState(false);
   return (
     <div>
       <div className="bg-[#141414] w-[270px] h-[180px] cursor-pointer rounded-lg shadow-lg shadow-black/50 hover:bg-[#202020] p-[10px]">
         <img src={codeImg} alt="" className="w-20 " />
 
-        <h3 className="text-xl w-[90%] line-clamp-1">
-          My first project project project
-        </h3>
+        <h3 className="text-xl w-[90%] line-clamp-1">{project.title}</h3>
 
         <div className="flex items-center justify-between">
-          <p className="text-base text-[gray]">Created on 9 Mon 2023.</p>
+          <p className="text-base text-[gray]">
+            Created on {new Date(project.date).toDateString()}.
+          </p>
           <img
             src={deleteImg}
             alt=""

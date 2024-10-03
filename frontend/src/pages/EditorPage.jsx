@@ -3,6 +3,9 @@ import EditorNavbar from "../components/EditorNavbar";
 import Editor from "@monaco-editor/react";
 import { MdLightMode } from "react-icons/md";
 import { AiOutlineExpandAlt } from "react-icons/ai";
+import axios from "axios";
+import { backendUrl } from "../helper";
+import { useParams } from "react-router-dom";
 
 function EditorPage() {
   const [isLightMode, setIsLightMode] = useState(false);
@@ -11,6 +14,7 @@ function EditorPage() {
   const [htmlCode, setHtmlCode] = useState("<h1>Hello world</h1>");
   const [cssCode, setCssCode] = useState("body { background-color: #f4f4f4; }");
   const [jsCode, setJsCode] = useState('console.log("Hello world!")');
+  let projectId = useParams();
 
   const changeTheme = () => {
     if (isLightMode) {
@@ -22,17 +26,65 @@ function EditorPage() {
     }
   };
 
-  const run = ()=>{
+  const run = () => {
     const html = htmlCode;
-    const css = `<style>${cssCode}</style>`
-    const js = `<script>${jsCode}</script>`
+    const css = `<style>${cssCode}</style>`;
+    const js = `<script>${jsCode}</script>`;
     const iframe = document.getElementById("iframe");
-    iframe.srcdoc = html+css+js;
-  }
+    iframe.srcdoc = html + css + js;
+  };
 
-  useEffect(()=>{
-    run()
-  },[])
+  useEffect(() => {
+    run();
+  }, []);
+
+  useEffect(() => {
+    const getProject = async () => {
+      await axios
+        .post(backendUrl + "/projects/getProject", {
+          token: localStorage.getItem("token"),
+          projectId,
+        })
+        .then((res) => {
+          console.log(res);
+          setHtmlCode(res.data.htmlCode);
+          setCssCode(res.data.cssCode);
+          setJsCode(res.data.jsCode);
+        })
+        .catch((err) => {
+          console.log("get project axios error".toUpperCase());
+        });
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey && event.key === "s") {
+        event.preventDefault();
+        axios
+          .post(backendUrl + "/projects/updateProject", {
+            token: localStorage.getItem("token"),
+            htmlCode,
+            cssCode,
+            jsCode,
+            projectId,
+          })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log("update project error");
+          });
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [projectId, htmlCode, cssCode, jsCode]);
 
   return (
     <div>

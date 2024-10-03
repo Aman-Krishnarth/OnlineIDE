@@ -13,7 +13,15 @@ function Home() {
 
   const [title, setTitle] = useState("");
 
-  const navigate = useNavigate()
+  const [projects, setProjects] = useState([]);
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredData = projects ? projects.filter(item =>
+    item.title.toLowerCase().includes(searchQuery.toLowerCase()) // Case insensitive filtering
+  ) : [];
+
+  const navigate = useNavigate();
 
   const createProject = async () => {
     if (title) {
@@ -24,7 +32,7 @@ function Home() {
         })
         .then((res) => {
           console.log(res);
-		  navigate(`/editor/${res.data.projectId}`)
+          navigate(`/editor/${res.data.projectId}`);
         })
         .catch((err) => {
           console.log("HOME AXIOS ERROR");
@@ -34,11 +42,29 @@ function Home() {
     }
   };
 
-  useEffect(()=>{
-	if(!localStorage.getItem("token")){
-		navigate("/login")
-	}
-  },[])
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/login");
+    }
+  }, []);
+
+  useEffect(() => {
+    getProjects();
+  }, []);
+
+  const getProjects = async () => {
+    await axios
+      .post(backendUrl + "/projects/getProjects", {
+        token: localStorage.getItem("token"),
+      })
+      .then((res) => {
+        console.log(res);
+        setProjects(res.data.projects);
+      })
+      .catch((err) => {
+        console.log("HOME GET PROJECTS AXIOS ERROR");
+      });
+  };
 
   return (
     <div>
@@ -52,6 +78,8 @@ function Home() {
               type="text"
               placeholder="Search here...!"
               className="p-2 bornder-none outline-none bg-transparent text-white text-lg"
+              value={searchQuery} // Bind search input to searchQuery state
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <button
@@ -66,21 +94,23 @@ function Home() {
       <div>
         {isGridLayout ? (
           <div className="px-[100px] flex flex-wrap gap-2 justify-center">
-            <GridCard />
-            <GridCard />
-            <GridCard />
-            <GridCard />
-            <GridCard />
-            <GridCard />
-            <GridCard />
+            {filteredData.length ? (
+              filteredData.map((project) => {
+                return <GridCard key={project._id} project={project} />;
+              })
+            ) : (
+              <p>Make Projects</p>
+            )}
           </div>
         ) : (
           <div className="grid px-[100px]">
-            <ListCard />
-            <ListCard />
-            <ListCard />
-            <ListCard />
-            <ListCard />
+            {filteredData.length ? (
+              filteredData.map((project) => {
+                return <ListCard key={project._id} project={project} />;
+              })
+            ) : (
+              <p>Make Projects</p>
+            )}
           </div>
         )}
       </div>
@@ -102,9 +132,10 @@ function Home() {
               </div>
             </div>
             <div className="flex items-center gap-[10px] w-full mt-2">
-              <button className="bg-[#00AEEF] text-white border-none rounded cursor-pointer text-base w-full mt-5 hover:bg-[#0086b3] btnBlue  mb-4 !p-[5px] !px-[10px] !py-[10px]"
-			 onClick={createProject} 
-			  >
+              <button
+                className="bg-[#00AEEF] text-white border-none rounded cursor-pointer text-base w-full mt-5 hover:bg-[#0086b3] btnBlue  mb-4 !p-[5px] !px-[10px] !py-[10px]"
+                onClick={createProject}
+              >
                 Create
               </button>
               <button

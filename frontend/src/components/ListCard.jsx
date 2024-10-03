@@ -1,18 +1,43 @@
 import React, { useState } from "react";
 import img from "../images/code.png";
 import deleteImg from "../images/delete.png";
+import axios from "axios";
+import { backendUrl } from "../helper";
+import { useNavigate } from "react-router-dom";
 
-function ListCard() {
+function ListCard({ project }) {
   const [isDeleteModelShow, setIsDeleteModelShow] = useState(false);
+  const navigate = useNavigate();
+
+  async function deleteProject(projectId) {
+    await axios
+      .post(backendUrl + "/projects/deleteProject", {
+        token: localStorage.getItem("token"),
+        projectId,
+      })
+      .then((res) => {
+        console.log(res);
+        setIsDeleteModelShow(false);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log("LIsT card delete project axios error");
+      });
+  }
 
   return (
     <div>
       <div className="w-full p-3 bg-[#141414] flex items-center justify-between rounded-lg cursor-pointer hover:bg-[#202020] mb-2">
-        <div className="flex items-center gap-2">
+        <div
+          className="flex items-center gap-2"
+          onClick={() => navigate(`/editor/${project._id}`)}
+        >
           <img src={img} alt="" className="w-[100px]" />
           <div>
-            <h3 className="text-xl">My First Project</h3>
-            <p className="text-[gray] text-sm">Created on 9 Mon 2023</p>
+            <h3 className="text-xl">{project.title}</h3>
+            <p className="text-[gray] text-sm">
+              Created on {new Date(project.date).toDateString()}.
+            </p>
           </div>
         </div>
         <div>
@@ -37,7 +62,7 @@ function ListCard() {
             <div className="flex w-full mt-5 items-center gap-[10px]">
               <button
                 onClick={() => {
-                  deleteProj(item._id);
+                  deleteProject(project._id);
                 }}
                 className="p-[10px] rounded-lg bg-[#FF4343] text-white cursor-pointer min-w-[49%]"
               >
