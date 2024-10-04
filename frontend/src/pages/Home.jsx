@@ -7,9 +7,9 @@ import { backendUrl } from "../helper";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
-  const [isGridLayout, setIsGridLayout] = useState(true);
-
   const [data, setData] = useState(null);
+
+  const [isGridLayout, setIsGridLayout] = useState(false);
 
   const [isCreateModelShow, setIsCreateModelShow] = useState(false);
 
@@ -90,7 +90,7 @@ function Home() {
 
   return (
     <div>
-      <Navbar setIsGridLayout={setIsGridLayout} />
+      <Navbar setIsGridLayout={setIsGridLayout} isGridLayout={isGridLayout}/>
 
       <div className="flex items-center justify-between px-[100px] my-10">
         <h2 className="text-2xl">Hi, {`${data ? data.username : ""}`} 👋</h2>

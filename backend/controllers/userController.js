@@ -22,7 +22,7 @@ const signup = async (req, res) => {
       password: hashedPassword,
     });
 
-    let token = jwt.sign({ email }, process.env.JWT_SECRET);
+    let token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
     res.json({
       success: true,
@@ -49,7 +49,7 @@ const login = async (req, res) => {
 
   bcrypt.compare(password, user.password, (err, result) => {
     if (result) {
-      const token = jwt.sign({ email }, process.env.JWT_SECRET);
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
       return res.json({
         success: true,
@@ -66,13 +66,13 @@ const login = async (req, res) => {
 };
 
 const getUserDetails = async (req, res) => {
-  console.log("in get user details")
+  console.log("in get user details");
   let { token } = req.body;
-  console.log(token)
+  console.log(token);
   console.log(process.env.JWT_SECRET);
   // let data = jwt.verify(token, process.env.JWT_SECRET);
-let data = jwt.verify(token,process.env.JWT_SECRET)
-  console.log(data)
+  let data = jwt.verify(token, process.env.JWT_SECRET);
+  console.log(data);
 
   let id = data.id;
 

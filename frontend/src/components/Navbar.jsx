@@ -7,7 +7,7 @@ import { BsFillGridFill } from "react-icons/bs";
 import { backendUrl, toggleClass } from "../helper";
 import axios from "axios";
 
-function Navbar({ setIsGridLayout }) {
+function Navbar({ setIsGridLayout,isGridLayout }) {
   const [isDropDown, setIsDropDown] = useState(false);
   const [data, setData] = useState(null);
   const navigate = useNavigate();
@@ -80,7 +80,7 @@ function Navbar({ setIsGridLayout }) {
           >
             {" "}
             <BsFillGridFill className="text-xl " />
-            Grid Layout
+            {isGridLayout ? "List": "Grid"} Layout
           </i>
         </div>
       </nav>

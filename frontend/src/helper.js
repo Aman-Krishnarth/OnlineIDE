@@ -3,4 +3,4 @@ export const toggleClass = (ele, className) => {
   el.classList.toggle(className);
 };
 
-export const backendUrl = "http://localhost:8080"
+export const backendUrl = "http://localhost:8080";
