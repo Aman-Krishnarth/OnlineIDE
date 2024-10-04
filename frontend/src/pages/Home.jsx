@@ -9,17 +9,21 @@ import { useNavigate } from "react-router-dom";
 function Home() {
   const [isGridLayout, setIsGridLayout] = useState(true);
 
+  const [data, setData] = useState(null);
+
   const [isCreateModelShow, setIsCreateModelShow] = useState(false);
 
   const [title, setTitle] = useState("");
 
   const [projects, setProjects] = useState([]);
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredData = projects ? projects.filter(item =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase()) // Case insensitive filtering
-  ) : [];
+  const filteredData = projects
+    ? projects.filter(
+        (item) => item.title.toLowerCase().includes(searchQuery.toLowerCase()) // Case insensitive filtering
+      )
+    : [];
 
   const navigate = useNavigate();
 
@@ -52,6 +56,24 @@ function Home() {
     getProjects();
   }, []);
 
+  useEffect(() => {
+    async function getDetails() {
+      await axios
+        .post(backendUrl + "/user/getUserDetails", {
+          token: localStorage.getItem("token"),
+        })
+        .then((res) => {
+          console.log(res);
+          setData(res.data.user);
+        })
+        .catch((err) => {
+          console.log("NAVBAR axios error");
+        });
+    }
+
+    getDetails();
+  }, []);
+
   const getProjects = async () => {
     await axios
       .post(backendUrl + "/projects/getProjects", {
@@ -71,7 +93,7 @@ function Home() {
       <Navbar setIsGridLayout={setIsGridLayout} />
 
       <div className="flex items-center justify-between px-[100px] my-10">
-        <h2 className="text-2xl">Hi, Kratos 👋</h2>
+        <h2 className="text-2xl">Hi, {`${data ? data.username : ""}`} 👋</h2>
         <div className="flex items-center gap-1">
           <div className="w-[350px] bg-[#141414] rounded flex items-center mb-4 ">
             <input
